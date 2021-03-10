@@ -1,0 +1,18 @@
+MODULE Client;
+
+CLASS Client 'Клиент'; 
+TABLE Client (Client);
+
+name 'Наименование' = DATA STRING[100] (Client);
+
+FORM clients 'Клиенты' 
+    OBJECTS c = Client
+    PROPERTIES (c) name, NEW, DELETE 
+;
+
+FORM listClients 'Выбор клиента'
+    OBJECTS c = Client
+    PROPERTIES(c) READONLY name
+ 
+    LIST Client OBJECT c
+;

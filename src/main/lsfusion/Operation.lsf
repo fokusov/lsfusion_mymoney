@@ -1,0 +1,87 @@
+MODULE Operation;
+
+REQUIRE Category, Client, Account, Ledger;
+
+CLASS Operation 'Операция';
+TABLE Operation (Operation);
+
+id 'Код' = DATA STRING[15] (Operation) INDEXED CHARWIDTH 5;
+number 'Номер' (Operation o) = INTEGER (id(o)) CHARWIDTH 5;
+date 'Дата' = DATA DATETIME (Operation);
+name 'Название' = DATA STRING[100] (Operation);
+desc 'Примечание' = DATA STRING[100] (Operation);
+amount 'Сумма' = DATA NUMERIC[15,2] (Operation);
+account 'Счет' = DATA Account (Operation);
+category 'Статья' = DATA Category (Operation);
+client 'Контрагент' = DATA Client (Operation);
+
+CLASS OperationType 'Тип операции' {
+                                 income 'Приход',
+                                 expense 'Расход'
+                             }
+TABLE OperationType (OperationType);
+
+name 'Наименование' (OperationType g) = staticCaption(g) IF g IS OperationType;
+
+FORM optypes 'Типы операций'
+    OBJECTS o = OperationType
+    PROPERTIES(o) READONLY name
+ 
+    LIST OperationType OBJECT o
+;
+
+type = DATA OperationType (Operation);
+typeName 'Тип операции' (Operation o) = name(type(o));
+
+accName 'Счет' (Operation o) = name(account(o));
+clientName 'Контрагент' (Operation o) = name(client(o));
+catName 'Статья' (Operation o) = name(category(o));
+
+FORM oper 'Операция'
+	OBJECTS o = Operation PANEL
+	PROPERTIES(o) number, date, accName, catName, amount, typeName, desc, clientName
+
+	EDIT Operation OBJECT o
+;
+
+DESIGN oper {
+    OBJECTS {
+        NEW main {
+            caption = 'Основные параметры';
+            type = CONTAINERH;
+            alignment = STRETCH;
+            MOVE PROPERTY (typeName(o));
+            MOVE PROPERTY (date(o));
+            MOVE PROPERTY (number(o));
+        }
+        NEW acc {
+            caption = 'Реквизиты операции';
+            type = CONTAINERV;
+            alignment = STRETCH;
+            MOVE PROPERTY (accName(o));
+            MOVE PROPERTY (catName(o));
+            MOVE PROPERTY (clientName(o));
+        }
+        NEW sum {
+            caption = 'Сумма';
+            type = CONTAINERH;
+            alignment = STRETCH;
+            MOVE PROPERTY (amount(o));
+        }
+        MOVE PROPERTY (desc(o));
+    }
+}
+
+FORM operList 'Список операций'
+	OBJECTS o = Operation
+	PROPERTIES(o) READONLY number, date, typeName, accName, clientName, amount
+	PROPERTIES(o) NEWSESSION NEW, EDIT, DELETE 
+;
+
+EXTEND CLASS Operation : Ledger;
+
+dateTime[Ledger](Operation o) += date(o);
+account[Ledger](Operation o) += account(o);
+amount[Ledger](Operation o) += amount(o);
+in[Ledger](Operation o) += IF type(o) == OperationType.income THEN TRUE ELSE NULL ;
+out[Ledger](Operation o) += IF type(o) == OperationType.expense THEN TRUE ELSE NULL ;

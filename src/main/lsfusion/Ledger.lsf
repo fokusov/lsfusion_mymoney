@@ -1,0 +1,25 @@
+MODULE Ledger;
+
+REQUIRE Utils, Account;
+
+CLASS ABSTRACT Ledger 'Движения по счетам';
+TABLE Ledger(Ledger);
+
+dateTime 'Дата/время' = ABSTRACT DATETIME (Ledger);
+
+account 'Счет' = ABSTRACT Account (Ledger);
+accountName 'Счет' (Ledger l) = name(account(l));
+
+amount 'Сумма' = ABSTRACT NUMERIC[15,2] (Ledger);
+in 'Приход' = ABSTRACT BOOLEAN (Ledger);
+out 'Расход' = ABSTRACT BOOLEAN (Ledger);
+balance 'Остаток' (Account a) = GROUP SUM IF out(Ledger l) THEN -amount(l) ELSE amount(l) BY account(l) MATERIALIZED; 
+balance2 'Остаток на дату' (Account a, DATETIME d) = balance(a) (-) [ GROUP SUM (IF out(Ledger l) THEN -amount(l) ELSE amount(l)) IF dateTime(l) >= d BY account(l)](a);
+
+CONSTRAINT balance(Account a) < 0 MESSAGE 'Остаток не может быть отрицательным!';
+
+FORM accLedger 'Остатки по счетам'
+    OBJECTS a = Account
+    PROPERTIES (a) READONLY name, balance
+;
+

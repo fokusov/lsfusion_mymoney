@@ -1,0 +1,37 @@
+MODULE Category;
+
+CLASS Category 'Статья';
+TABLE Category (Category);
+
+name 'Наименование' = DATA STRING[100] (Category);
+desc 'Примечание' = DATA STRING[100] (Category);
+
+CLASS CategoryType 'Тип статьи'{
+                            income 'Приход',
+                            expense 'Расход'
+                        }
+TABLE CategoryType (CategoryType);                   
+                           
+name 'Наименование' (CategoryType ct) = staticCaption(ct) IF ct IS CategoryType;
+
+FORM cats 'Типы статей'
+    OBJECTS ct = CategoryType
+    PROPERTIES(ct) READONLY name
+ 
+    LIST CategoryType OBJECT ct
+;
+
+type = DATA CategoryType (Category);
+nameType 'Тип статьи' (Category c) = name(type(c));
+
+FORM categories 'Статьи' 
+    OBJECTS c = Category
+    PROPERTIES (c) name, nameType, desc, NEW, DELETE 
+;
+
+FORM listClients 'Выбор статьи'
+    OBJECTS c = Category
+    PROPERTIES(c) READONLY name
+ 
+    LIST Category OBJECT c
+;

@@ -1,0 +1,18 @@
+MODULE Main;
+    
+REQUIRE Category, Client, Account, Operation, MasterData, Ledger;
+
+NAVIGATOR {
+    masterData {
+        NEW FOLDER moneyFolder 'Конфигурация' {
+            NEW categories;
+            NEW clients;
+            NEW accounts;
+        }
+    }
+    NEW FOLDER documents 'Документы' AFTER masterData WINDOW toolbar {
+        NEW operList;
+        NEW accLedger;
+    }
+    // NEW currentBalanceItemStock AFTER documents;
+}

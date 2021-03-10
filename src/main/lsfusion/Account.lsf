@@ -1,0 +1,41 @@
+MODULE Account;
+
+CLASS Account 'Счет';
+TABLE Account (Account);
+
+name 'Наименование' = DATA STRING[100] (Account);
+
+CLASS AccountType 'Тип счета' {
+                                 cash 'Наличные',
+                                 card 'Карта',
+                                 deposit 'Депозит',
+                                 other 'Прочее'
+                             }
+TABLE AccountType (AccountType);
+
+name 'Наименование' (AccountType g) = staticCaption(g) IF g IS AccountType;
+
+FORM acctypes 'Типы счетов'
+    OBJECTS a = AccountType
+    PROPERTIES(a) READONLY name
+ 
+    LIST AccountType OBJECT a
+;
+
+type = DATA AccountType (Account);
+nameType 'Тип счета' (Account a) = name(type(a));
+desc 'Примечание' = DATA STRING[100] (Account);
+
+FORM accounts 'Счета' 
+    OBJECTS a = Account 
+    PROPERTIES (a) name, nameType, desc
+    PROPERTIES(a) NEWSESSION NEW, EDIT, DELETE 
+;
+
+FORM dialogAccounts 'Выбор счета'
+    OBJECTS a = Account 
+    PROPERTIES(a) READONLY name, nameType
+    PROPERTIES(a) NEW, EDIT, DELETE 
+        
+    LIST Account OBJECT a
+;
