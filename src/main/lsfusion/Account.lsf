@@ -28,14 +28,22 @@ desc 'Примечание' = DATA STRING[100] (Account);
 
 FORM accounts 'Счета' 
     OBJECTS a = Account 
-    PROPERTIES (a) name, nameType, desc
-    PROPERTIES(a) NEWSESSION NEW, EDIT, DELETE 
+    PROPERTIES (a) READONLY name, nameType, desc
+    PROPERTIES(a) NEWSESSION NEW, EDIT, DELETE
+
+    LIST Account OBJECT a
+;
+
+FORM editAccount 'Счет'
+    OBJECTS a = Account PANEL
+    PROPERTIES(a) name, nameType, desc
+
+    EDIT Account OBJECT a
 ;
 
 FORM dialogAccounts 'Выбор счета'
     OBJECTS a = Account 
     PROPERTIES(a) READONLY name, nameType
-    PROPERTIES(a) NEW, EDIT, DELETE 
         
     LIST Account OBJECT a
 ;

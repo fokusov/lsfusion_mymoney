@@ -5,12 +5,22 @@ TABLE Client (Client);
 
 name 'Наименование' = DATA STRING[100] (Client);
 
-FORM clients 'Клиенты' 
-    OBJECTS c = Client
-    PROPERTIES (c) name, NEW, DELETE 
+FORM editClient 'Клиент' // форма для отображения "карточки" клиента
+    OBJECTS c = Client PANEL
+    PROPERTIES(c) name
+
+    EDIT Client OBJECT c
 ;
 
-FORM listClients 'Выбор клиента'
+FORM listClients 'Список клиентов' 
+    OBJECTS c = Client
+    PROPERTIES (c) READONLY name
+    PROPERTIES(c) NEWSESSION NEW, EDIT, DELETE
+
+    LIST Client OBJECT c
+;
+
+FORM selectClient 'Выбор клиента'
     OBJECTS c = Client
     PROPERTIES(c) READONLY name
  

@@ -48,7 +48,6 @@ DESIGN oper {
     OBJECTS {
         NEW main {
             caption = 'Основные параметры';
-            type = CONTAINERH;
             alignment = STRETCH;
             MOVE PROPERTY (typeName(o));
             MOVE PROPERTY (date(o));
@@ -56,7 +55,6 @@ DESIGN oper {
         }
         NEW acc {
             caption = 'Реквизиты операции';
-            type = CONTAINERV;
             alignment = STRETCH;
             MOVE PROPERTY (accName(o));
             MOVE PROPERTY (catName(o));
@@ -64,7 +62,6 @@ DESIGN oper {
         }
         NEW sum {
             caption = 'Сумма';
-            type = CONTAINERH;
             alignment = STRETCH;
             MOVE PROPERTY (amount(o));
         }

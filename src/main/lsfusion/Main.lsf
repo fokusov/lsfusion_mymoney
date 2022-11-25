@@ -5,8 +5,8 @@ REQUIRE Category, Client, Account, Operation, MasterData, Ledger;
 NAVIGATOR {
     masterData {
         NEW FOLDER moneyFolder 'Конфигурация' {
+            NEW listClients;
             NEW categories;
-            NEW clients;
             NEW accounts;
         }
     }

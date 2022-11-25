@@ -14,22 +14,32 @@ TABLE CategoryType (CategoryType);
                            
 name 'Наименование' (CategoryType ct) = staticCaption(ct) IF ct IS CategoryType;
 
-FORM cats 'Типы статей'
-    OBJECTS ct = CategoryType
-    PROPERTIES(ct) READONLY name
- 
-    LIST CategoryType OBJECT ct
-;
-
 type = DATA CategoryType (Category);
 nameType 'Тип статьи' (Category c) = name(type(c));
 
-FORM categories 'Статьи' 
-    OBJECTS c = Category
-    PROPERTIES (c) name, nameType, desc, NEW, DELETE 
+FORM cats 'Типы статей'
+    OBJECTS ct = CategoryType
+    PROPERTIES(ct) READONLY name
+
+    LIST CategoryType OBJECT ct
 ;
 
-FORM listClients 'Выбор статьи'
+FORM categories 'Статьи' 
+    OBJECTS c = Category
+    PROPERTIES (c) READONLY name, nameType, desc
+    PROPERTIES(c) NEWSESSION NEW, EDIT, DELETE
+
+    LIST Category OBJECT c
+;
+
+FORM editCategory 'Категория'
+    OBJECTS c = Category PANEL
+    PROPERTIES(c) name, nameType, desc
+
+    EDIT Category OBJECT c
+;
+
+FORM listCategories 'Выбор статьи'
     OBJECTS c = Category
     PROPERTIES(c) READONLY name
  
